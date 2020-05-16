@@ -1,6 +1,7 @@
 <template>
-  <div>
+  <div class="container">
     <h1>Dashboard</h1>
+    Total Votes: {{ board.totalVotes }}
     <template v-for="(column, $columnIndex) in board.columns">
       <v-data-table
         :caption="column.name"

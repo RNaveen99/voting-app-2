@@ -6,7 +6,8 @@ Vue.use(Vuex)
 
 const board = JSON.parse(localStorage.getItem('board')) || {
   name: 'Election Board',
-  columns: []
+  columns: [],
+  totalVotes: 0
 }
 
 export default new Vuex.Store({
@@ -67,6 +68,8 @@ export default new Vuex.Store({
           taskObject.votes++
         })
       })
-    }
+      state.board.totalVotes++
+    },
+    UPDATE_VOTING_LIMIT() {}
   }
 })

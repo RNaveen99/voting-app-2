@@ -27,7 +27,6 @@
 
           <v-divider></v-divider>
 
-          <!-- <v-list> -->
           <ColumnTask
             v-for="(task, $taskIndex) of column.tasks"
             :key="$taskIndex"
@@ -37,7 +36,6 @@
             :columnIndex="columnIndex"
             :board="board"
           />
-          <!-- </v-list> -->
 
           <v-card-actions>
             <v-row>
@@ -54,6 +52,7 @@
                   type="number"
                   label="Voting Limit"
                   v-model.number="column.votingLimit"
+                  @change="updateVotingLimit"
                   min="1"
                   :max="column.tasks.length - 1"
                   outlined
@@ -104,6 +103,9 @@ export default {
     },
     deleteColumn(e, columnIndex) {
       this.$store.commit('DELETE_COLUMN', { columnIndex })
+    },
+    updateVotingLimit() {
+      this.$store.commit('UPDATE_VOTING_LIMIT')
     }
   }
 }

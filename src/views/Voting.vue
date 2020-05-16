@@ -2,12 +2,12 @@
   <v-container>
     <v-row>
       <v-col>
-        <v-form>
+        <v-form ref="votingForm">
           <v-row justify-center>
             <v-col
               v-for="(column, $columnIndex) in board.columns"
               :key="$columnIndex"
-              cols="5"
+              cols="4"
               class="ma-auto"
             >
               <v-card>
@@ -27,18 +27,20 @@
                     :value="task.name"
                     @click="votingLimitValidation($event, column, $columnIndex)"
                     class="checkbox"
+                    required
                   >
                   </v-checkbox>
                 </v-card-text>
               </v-card>
             </v-col>
           </v-row>
-          <v-row>
-            <v-col>
-              {{ selected }}
-            </v-col>
-          </v-row>
           <v-btn class="mr-4 float-right" @click="submit">submit</v-btn>
+          Total Votes: {{ board.totalVotes }}
+
+          <v-snackbar v-model="snackbar" :class="classes">
+            {{ msg }}
+            <v-btn text color="primary" @click="snackbar = false">Close</v-btn>
+          </v-snackbar>
         </v-form>
       </v-col>
     </v-row>
@@ -50,7 +52,10 @@ import { mapState } from 'vuex'
 export default {
   data() {
     return {
-      selected: []
+      selected: [],
+      msg: '',
+      snackbar: false,
+      classes: ''
     }
   },
   computed: {
@@ -66,7 +71,19 @@ export default {
       }
     },
     submit() {
-      this.$store.commit('UPDATE_VOTES', { selected: this.selected })
+      let temp = this.selected.some(column => column.length === 0)
+      if (temp) {
+        this.msg = 'Validation Error'
+        this.classes = 'red--text'
+        this.snackbar = true
+      } else {
+        this.$store.commit('UPDATE_VOTES', { selected: this.selected })
+        this.msg = 'Success'
+        this.classes = 'green--text'
+        this.snackbar = true
+
+        this.$refs['votingForm'].reset()
+      }
     }
   }
 }
